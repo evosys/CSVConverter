@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>331</width>
-    <height>122</height>
+    <height>157</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -65,7 +65,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>60</y>
+      <y>99</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -85,6 +85,16 @@
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cbOutlet">
+    <property name="geometry">
+     <rect>
+      <x>19</x>
+      <y>55</y>
+      <width>291</width>
+      <height>22</height>
+     </rect>
     </property>
    </widget>
   </widget>

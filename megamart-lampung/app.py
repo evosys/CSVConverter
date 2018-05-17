@@ -24,7 +24,7 @@ NEWDIR     = 'CSV-output'
 DELIM      = ';'
 NSD        = {'Default':'urn:schemas-microsoft-com:office:spreadsheet', 'o': 'urn:schemas-microsoft-com:office:office', 'ss': 'urn:schemas-microsoft-com:office:spreadsheet'}
 
-CODE_STORE = '12345'
+CODE_STORE = '548511'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -47,6 +47,15 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         # hide label path
         self.lbPath.hide()
         self.lbPath.clear()
+
+        # add item to combobox
+        self.cbOutlet.addItem('MEGA MART KERTAPATI', '548511')
+        self.cbOutlet.addItem('MEGA MART (KERTAPATI) 2', '964709')
+        self.cbOutlet.addItem('MEGA MART KM 12', '548525')
+        self.cbOutlet.addItem('MEGA MART KM 18', '548550')
+        self.cbOutlet.addItem('MEGA MART PUSRI', '548512')
+        self.cbOutlet.addItem('MEGA MART (PLAJU)', '964710')
+        self.cbOutlet.addItem('MEGA MART (UTOYO)', '964711')
 
 
     def openXLS(self) :
@@ -145,14 +154,16 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                 os.remove(resPathFile)
             else :
                 os.makedirs(os.path.dirname(resPathFile), exist_ok=True)
-                csv = open(resPathFile, 'w+')
+
+
+            csv = open(resPathFile, 'w+')
 
             # write first header
             csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
             # write new line
             csv.write("\n")
 
-            a = CODE_STORE
+            a = str(self.cbOutlet.itemData(self.cbOutlet.currentIndex()))
             b = self.getPONO(pathXLS)
             c = self.getBRC(pathXLS)
             d = self.getQTY(pathXLS)
