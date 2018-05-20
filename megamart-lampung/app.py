@@ -175,6 +175,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                 resC = resC.text
                 resD = re.sub(r"\D", "", resD.text)
                 resE = resE.text
+                resE = resE.replace(",", "")
                 # print(resA+DELIM+resB+DELIM+resC+DELIM+resD+DELIM+resE)
                 csv.write(resA+DELIM+resB+DELIM+resC+DELIM+resD+DELIM+resE)
                 csv.write("\n")
