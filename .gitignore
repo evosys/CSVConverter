@@ -1,4 +1,16 @@
-megamart-lampung/__pycache__
-megamart-lampung/build
-megamart-lampung/dist
-megamart-lampung/CSV-output
+[Lampung] Megamart/__pycache__/*
+[Lampung] Megamart/build/*
+[Lampung] Megamart/dist/*
+[Lampung] Megamart/CSV-output/*
+
+
+[Jogja] Pamela Store/__pycache__/*
+[Jogja] Pamela Store/build/*
+[Jogja] Pamela Store/dist/*
+[Jogja] Pamela Store/CSV-output/*
+
+
+[Jogja] Gardena/__pycache__/*
+[Jogja] Gardena/build/*
+[Jogja] Gardena/dist/*
+[Jogja] Gardena/CSV-output/*
