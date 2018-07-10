@@ -23,7 +23,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '358971'
+CODE_STORE = '645515'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
