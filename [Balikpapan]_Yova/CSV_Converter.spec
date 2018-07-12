@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Balikpapan]_Yova'],
+             pathex=['E:\\Python\\CSVConverter\\[Balikpapan]_Yova'],
              binaries=[],
              datas=[],
              hiddenimports=[],
