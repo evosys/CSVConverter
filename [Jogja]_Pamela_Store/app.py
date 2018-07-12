@@ -177,7 +177,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
             res.append(tmp)
 
-        print(res)
+        # print(res)
 
         return res
 
