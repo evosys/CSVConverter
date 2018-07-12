@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Sumatra Utara] Smarco'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Medan]_Smarco'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,16 +18,12 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          exclude_binaries=True,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           name='CSV_Converter',
-          debug=True,
+          debug=False,
           strip=False,
           upx=False,
-          console=True , version='version.txt', icon='resources\\icon.ico')
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=False,
-               name='CSV_Converter')
+          runtime_tmpdir=None,
+          console=False , version='version.txt', icon='resources\\icon.ico')
