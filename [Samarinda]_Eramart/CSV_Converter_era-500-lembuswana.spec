@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['era_500_lembuswana.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Banjarmasin]_Eramart'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Samarinda]_Eramart'],
              binaries=[],
              datas=[],
              hiddenimports=[],

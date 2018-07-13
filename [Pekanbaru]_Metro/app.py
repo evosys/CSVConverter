@@ -1,7 +1,7 @@
 import sys
 import time
 import os
-import era_500_lembuswana_info
+import appinfo
 import itertools
 import string
 from PyQt5 import QtCore, QtWidgets
@@ -23,7 +23,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '443197'
+CODE_STORE = '645540'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -47,7 +47,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.btCnv.clicked.connect(self.BtnCnv)
 
         # status bar
-        self.statusBar().showMessage('v'+era_500_lembuswana_info._version)
+        self.statusBar().showMessage('v'+appinfo._version)
 
         # hide label path
         self.lbPath.hide()
@@ -117,27 +117,12 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # get PO Number
     def getPONO(self) :
-        result = []
-        fr = []
-
-        accepted = ['PO']
 
         sheet = self.funcXLRD()
 
-        totRow = sheet.nrows - 1
+        newlist = sheet.cell_value(8, 12)
 
-        newlist = self.get_cell_range(2, 0, 2, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if any(ignore in el for ignore in accepted)])
-
-        for x in fr :
-            for k in x :
-                if k != "" :
-                    result.append(k)
-
-        return result
-
+        return newlist
 
 
     # get Barcode
@@ -145,17 +130,19 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         result = []
         fr = []
 
-        rmoving = list(string.ascii_lowercase) + list(string.ascii_uppercase)
+        alpha = list(string.ascii_lowercase) + list(string.ascii_uppercase)
+        rmoving = ['/'] + alpha
 
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows-12
 
-        totRow = sheet.nrows - 1
+        newlist = self.get_cell_range(11, 0, 11, totalrow)
 
-        newlist = self.get_cell_range(1, 0, 1, totRow)
-
+        # remove no needed record
         for sublist in newlist :
             fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
 
+        # remove empty value
         for x in fr :
             for k in x :
                 if k != "" :
@@ -172,19 +159,16 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         alpha = list(string.ascii_lowercase) + list(string.ascii_uppercase)
         rmoving = ['/'] + alpha
 
+
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows-12
 
-        totRow = sheet.nrows - 1
+        newlist = self.get_cell_range(7, 0, 7, totalrow)
 
-        newlist = self.get_cell_range(7, 0, 7, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
-
-        for x in fr :
+        for x in newlist :
             for k in x :
                 if k != "" :
-                    result.append(k)
+                    result.append(str(int(k)))
 
         return result
 
@@ -194,38 +178,31 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         result = []
         fr = []
 
-        rmoving = list(string.ascii_lowercase) + list(string.ascii_uppercase)
+        alpha = list(string.ascii_lowercase) + list(string.ascii_uppercase)
+        rmoving = ['/'] + alpha
+
 
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows-12
 
-        totRow = sheet.nrows - 1
+        newlist = self.get_cell_range(34, 0, 34, totalrow)
 
-        newlist = self.get_cell_range(11, 0, 11, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
-
-        for x in fr :
+        for x in newlist :
             for k in x :
                 if k != "" :
-                    res = str(k).split(',')[0]
-                    result.append(res.replace(".", ""))
+                    result.append(str(int(k)))
 
         return result
 
 
-    def grouper(self, iterable, n, fillvalue=None) :
-        "Collect data into fixed-length chunks or blocks"
-        # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
-        args = [iter(iterable)] * n
-        return itertools.zip_longest(fillvalue=fillvalue, *args)
 
     # button convert CSV
     def BtnCnv(self) :
-
-        # current dir
         current_dir = os.getcwd()
-
+        # PATH file
+        pathXLS = self.lbPath.text()
+        resPath, resFilename = os.path.split(os.path.splitext(pathXLS)[0])
+        resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
         # make as variabel
@@ -234,42 +211,24 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         qty = self.getQTY()
         mdl = self.getMDL()
 
-        # cut every 40 item
-        brc40 = list(self.grouper(brc, 40))
-        qty40 = list(self.grouper(qty, 40))
-        mdl40 = list(self.grouper(mdl, 40))
 
-        for x, (tmpBRC, tmpQTY, tmpMDL, tmpPONO) in enumerate(zip(brc40, qty40, mdl40, ponum)) :
-
-            # convert from tuple to list
-            tmpBRC = list(tmpBRC)
-            tmpQTY = list(tmpQTY)
-            tmpMDL = list(tmpMDL)
-
-            # remove None value
-            tmpBRC = [i for i in tmpBRC if i is not None]
-
-            filename = tmpPONO.replace("/", "-")
-
-            resPathFile = self.CreateDir(current_dir, NEWDIR, filename)
-
-            # prepare write CSV
-            with open(resPathFile, "w+") as csv :
+        # prepare write CSV
+        with open(resPathFile, "w+") as csv :
 
             # write first header
-                csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
+            csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
 
-                # write new line
-                csv.write("\n")
+            # write new line
+            csv.write("\n")
 
+            for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(CODE_STORE, len(brc)), itertools.repeat(ponum, len(brc)), brc, qty, mdl) :
+                # resPO = resPO[0][0]
+                resQT = str(resQT)
+                resMD = str(resMD)
+                csv.write(resCD+DELIM+resPO+DELIM+resBC+DELIM+resQT+DELIM+resMD+'\n')
+                print(self.getPONO())
 
-                for resCD, resBRC, resQTY, resMDL in zip(itertools.repeat(CODE_STORE, len(tmpBRC)), tmpBRC, tmpQTY, tmpMDL) :
-
-                    resQTY = resQTY.strip()
-
-                    csv.write(str(resCD)+DELIM+str(ponum[x])+DELIM+str(resBRC)+DELIM+str(resQTY)+DELIM+str(resMDL)+'\n')
-
-                csv.close()
+            csv.close()
 
         reply = QMessageBox.information(self, "Information", "Success!", QMessageBox.Ok)
 
@@ -303,7 +262,7 @@ if __name__ == '__main__' :
     time.sleep(1)
 
     window = mainWindow()
-    window.setWindowTitle(era_500_lembuswana_info._appname)
+    window.setWindowTitle(appinfo._appname)
     # window.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
     # window.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
     window.show()

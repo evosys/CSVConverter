@@ -3,8 +3,8 @@
 block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
-a = Analysis(['eramart_pelita.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Samarinda]_Eramart'],
+a = Analysis(['app.py'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Pekanbaru]_Metro'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='CSV_Converter_eramart-pelita',
+          name='CSV_Converter',
           debug=False,
           strip=False,
           upx=False,

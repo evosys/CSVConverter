@@ -47,7 +47,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.btCnv.clicked.connect(self.BtnCnv)
 
         # status bar
-        self.statusBar().showMessage('v'+appinfo._version)
+        self.statusBar().showMessage('v'+eramart_pelita_info._version)
 
         # hide label path
         self.lbPath.hide()
@@ -234,13 +234,12 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         qty = self.getQTY()
         mdl = self.getMDL()
 
-        # cut every 10 item
-        brc10 = list(self.grouper(brc, 10))
-        qty10 = list(self.grouper(qty, 10))
-        mdl10 = list(self.grouper(mdl, 10))
+        # cut every 40 item
+        brc40 = list(self.grouper(brc, 40))
+        qty40 = list(self.grouper(qty, 40))
+        mdl40 = list(self.grouper(mdl, 40))
 
-
-        for tmpBRC, tmpQTY, tmpMDL, tmpPONO in zip(brc10, qty10, mdl10, ponum) :
+        for x, (tmpBRC, tmpQTY, tmpMDL, tmpPONO) in enumerate(zip(brc40, qty40, mdl40, ponum)) :
 
             # convert from tuple to list
             tmpBRC = list(tmpBRC)
@@ -268,7 +267,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
                     resQTY = resQTY.strip()
 
-                    csv.write(str(resCD)+DELIM+str(tmpPONO)+DELIM+str(resBRC)+DELIM+str(resQTY)+DELIM+str(resMDL)+'\n')
+                    csv.write(str(resCD)+DELIM+str(ponum[x])+DELIM+str(resBRC)+DELIM+str(resQTY)+DELIM+str(resMDL)+'\n')
 
                 csv.close()
 
@@ -276,11 +275,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if reply == QMessageBox.Ok :
             self.open_file(str(resultPath))
-
-
-
-
-
 
 
 if __name__ == '__main__' :
@@ -309,7 +303,7 @@ if __name__ == '__main__' :
     time.sleep(1)
 
     window = mainWindow()
-    window.setWindowTitle(appinfo._appname)
+    window.setWindowTitle(eramart_pelita_info._appname)
     # window.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
     # window.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
     window.show()
