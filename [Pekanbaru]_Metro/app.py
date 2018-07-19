@@ -91,6 +91,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
 
+        resPathFile = str(resPathFile)
+
         if os.path.exists(resPathFile) :
             os.remove(resPathFile)
         else :
@@ -226,7 +228,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                 resQT = str(resQT)
                 resMD = str(resMD)
                 csv.write(resCD+DELIM+resPO+DELIM+resBC+DELIM+resQT+DELIM+resMD+'\n')
-                print(self.getPONO())
 
             csv.close()
 

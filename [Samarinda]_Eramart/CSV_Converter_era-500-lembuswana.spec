@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['era_500_lembuswana.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Samarinda]_Eramart'],
+             pathex=['E:\\Python\\CSVConverter\\[Samarinda]_Eramart'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -18,12 +18,16 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
+          exclude_binaries=True,
           name='CSV_Converter_era-500-lembuswana',
           debug=False,
           strip=False,
           upx=False,
-          runtime_tmpdir=None,
           console=False , version='version.txt', icon='resources\\icon.ico')
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=False,
+               name='CSV_Converter_era-500-lembuswana')
