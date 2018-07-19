@@ -1,0 +1,1 @@
+pyinstaller --onefile --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_Converter" --version-file=version.txt app.py
