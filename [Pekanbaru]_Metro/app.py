@@ -122,9 +122,9 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         sheet = self.funcXLRD()
 
-        newlist = sheet.cell_value(8, 12)
+        result = sheet.cell_value(8, 13)
 
-        return newlist
+        return result
 
 
     # get Barcode
@@ -138,7 +138,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows-12
 
-        newlist = self.get_cell_range(11, 0, 11, totalrow)
+        newlist = self.get_cell_range(12, 0, 12, totalrow)
 
         # remove no needed record
         for sublist in newlist :
@@ -165,7 +165,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows-12
 
-        newlist = self.get_cell_range(7, 0, 7, totalrow)
+        newlist = self.get_cell_range(8, 0, 8, totalrow)
 
         for x in newlist :
             for k in x :
@@ -187,7 +187,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows-12
 
-        newlist = self.get_cell_range(34, 0, 34, totalrow)
+        newlist = self.get_cell_range(35, 0, 35, totalrow)
 
         for x in newlist :
             for k in x :

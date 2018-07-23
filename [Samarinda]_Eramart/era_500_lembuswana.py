@@ -126,7 +126,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         totRow = sheet.nrows - 1
 
-        newlist = self.get_cell_range(2, 0, 2, totRow)
+        newlist = self.get_cell_range(9, 0, 9, totRow)
 
         for sublist in newlist :
             fr.append([el for el in sublist if any(ignore in el for ignore in accepted)])
@@ -151,7 +151,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         totRow = sheet.nrows - 1
 
-        newlist = self.get_cell_range(1, 0, 1, totRow)
+        newlist = self.get_cell_range(4, 0, 4, totRow)
 
         for sublist in newlist :
             fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
@@ -168,18 +168,26 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     def getQTY(self) :
         result = []
         fr = []
+        tmp = []
 
         alpha = list(string.ascii_lowercase) + list(string.ascii_uppercase)
-        rmoving = ['/'] + alpha
+        rmoving = ['/', '.'] + alpha
 
         sheet = self.funcXLRD()
 
         totRow = sheet.nrows - 1
 
-        newlist = self.get_cell_range(7, 0, 7, totRow)
+        newlist = self.get_cell_range(20, 0, 20, totRow)
 
         for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
+            for val in sublist :
+                if type(val) == float :
+                    tmp.append(str(int(val)))
+                else :
+                    tmp.append(val)
+
+        # remove no needed value from list
+        fr.append([el for el in tmp if not any(ignore in el for ignore in rmoving)])
 
         for x in fr :
             for k in x :
@@ -193,6 +201,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     def getMDL(self) :
         result = []
         fr = []
+        tmp = []
 
         rmoving = list(string.ascii_lowercase) + list(string.ascii_uppercase)
 
@@ -200,16 +209,23 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         totRow = sheet.nrows - 1
 
-        newlist = self.get_cell_range(11, 0, 11, totRow)
+        newlist = self.get_cell_range(29, 0, 29, totRow)
 
         for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
+            for val in sublist :
+                if type(val) == float :
+                    tmp.append(str(int(val)))
+                else :
+                    tmp.append(val)
+
+        # remove no needed value from list
+        fr.append([el for el in tmp if not any(ignore in el for ignore in rmoving)])
+
 
         for x in fr :
             for k in x :
                 if k != "" :
-                    res = str(k).split(',')[0]
-                    result.append(res.replace(".", ""))
+                    result.append(k)
 
         return result
 
@@ -275,6 +291,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if reply == QMessageBox.Ok :
             self.open_file(str(resultPath))
+            print(resultPath)
 
 
 if __name__ == '__main__' :
