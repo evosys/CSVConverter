@@ -87,6 +87,29 @@
      <string>TextLabel</string>
     </property>
    </widget>
+   <widget class="QLabel" name="lbLoading">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>105</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

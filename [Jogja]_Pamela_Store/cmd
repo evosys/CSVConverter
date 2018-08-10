@@ -1,0 +1,4 @@
+java -jar /tmp/_MEIFAtPTH/tabula/tabula-1.0.2-jar-with-dependencies.jar --pages all --area 84.455,384.325,103.801,472.872 /home/virtual/Desktop/test.pdf
+
+
+subprocess.CalledProcessError: Command '['java', '-jar', '/tmp/_MEIFAtPTH/tabula/tabula-1.0.2-jar-with-dependencies.jar', '--pages', 'all', '--area', '84.455,384.325,103.801,472.872', '--format', 'JSON', 'purchase.order.print(15).pdf']'

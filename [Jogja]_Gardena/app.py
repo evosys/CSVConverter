@@ -22,7 +22,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '358926'
+CODE_STORE = '397760'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -136,8 +136,11 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         return self.get_cell_range(7, 6, 7, totalrow)
 
-    # button convert CSV
     def BtnCnv(self) :
+        print(self.get_barcode())
+
+    # button convert CSV
+    def BtnCnv1(self) :
         current_dir = os.getcwd()
         # PATH file
         pathXLS = self.lbPath.text()

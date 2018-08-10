@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="/">
-    <file alias="/resources/icon.png">/resources/icon.png</file>
-    <file alias="/resources/unilever_splash.png">/resources/unilever_splash.png</file>
+    <file>resources/unilever_splash.png</file>
+    <file>resources/icon.png</file>
   </qresource>
 </RCC>
