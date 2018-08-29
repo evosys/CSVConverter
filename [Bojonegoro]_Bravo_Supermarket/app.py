@@ -85,6 +85,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                 errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
                 sys.exit(0)
 
+
     # function get cell range
     def get_cell_range(self, start_col, start_row, end_col, end_row):
         sheet = self.funcXLRD()

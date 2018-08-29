@@ -55,7 +55,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # PATH FILE
     def openXLS(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","XLS Files (*.xls)")
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","XLS Files (*.xls *.xlsx)")
         if fileName:
             self.lbPath.setText(fileName)
             x = QUrl.fromLocalFile(fileName).fileName()
@@ -119,9 +119,18 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
 
         result = sheet.cell_value(rowx=5, colx=2)
-        result = result.replace('/', '-')
+        # result = result.replace('/', '-')
 
         return result
+
+    def get_ponum_custum(self) :
+        sheet = self.funcXLRD()
+
+        result = sheet.cell_value(rowx=5, colx=1)
+        # result = result.replace('/', '-')
+
+        return result
+
 
     # get Barcode
     def get_barcode(self) :
@@ -129,6 +138,17 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         totalrow = sheet.nrows-12
 
         tmp = self.get_cell_range(1, 14, 1, totalrow)
+
+        evenVal = tmp[1:][::2]
+
+        return evenVal
+
+    # get Barcode
+    def get_barcode_custom(self) :
+        sheet = self.funcXLRD()
+        totalrow = sheet.nrows-12
+
+        tmp = self.get_cell_range(0, 14, 0, totalrow)
 
         evenVal = tmp[1:][::2]
 
@@ -168,8 +188,23 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
         # make as variabel
-        ponum = self.get_ponum()
-        brc = self.get_barcode()
+        TMPponum = self.get_ponum()
+
+        if not TMPponum :
+            ponum = self.get_ponum_custum()
+
+        else :
+            ponum = TMPponum
+
+
+        TMPbrc = self.get_barcode()
+
+        brcCHK = all(x == '' for i in TMPbrc for x in i)
+        if brcCHK :
+            brc = self.get_barcode_custom()
+        else :
+            brc = self.get_barcode()
+
         qty = self.get_qty()
         mdl = self.get_mdl()
 
