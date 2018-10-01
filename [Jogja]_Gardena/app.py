@@ -136,11 +136,11 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         return self.get_cell_range(7, 6, 7, totalrow)
 
-    def BtnCnv(self) :
+    def BtnCnvSmpl(self) :
         print(self.get_barcode())
 
     # button convert CSV
-    def BtnCnv1(self) :
+    def BtnCnv(self) :
         current_dir = os.getcwd()
         # PATH file
         pathXLS = self.lbPath.text()

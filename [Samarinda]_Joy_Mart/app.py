@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: ichadhr
+# @Date:   2018-07-16 10:10:23
+# @Last Modified by:   richard.hari@live.com
+# @Last Modified time: 2018-10-01 14:18:43
 import sys
 import time
 import os
@@ -11,6 +16,8 @@ from gui import Ui_MainWindow
 from pathlib import Path
 import xlrd
 import distutils.dir_util
+from itertools import chain
+import collections
 
 # variabel for header CSV
 HEAD_CODE_STORE = 'code_store'
@@ -126,9 +133,9 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     # get Barcode
     def get_barcode(self) :
         sheet = self.funcXLRD()
-        totalrow = sheet.nrows-12
+        totalrow = sheet.nrows-10
 
-        tmp = self.get_cell_range(1, 14, 1, totalrow)
+        tmp = self.get_cell_range(1, 10, 1, totalrow)
 
         evenVal = tmp[1:][::2]
 
@@ -137,9 +144,9 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     # get QTY
     def get_qty(self) :
         sheet = self.funcXLRD()
-        totalrow = sheet.nrows-12
+        totalrow = sheet.nrows-10
 
-        tmp = self.get_cell_range(9, 14, 9, totalrow)
+        tmp = self.get_cell_range(9, 10, 9, totalrow)
 
         evenVal = tmp[1:][::2]
 
@@ -149,13 +156,30 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     # get modal karton
     def get_mdl(self) :
         sheet = self.funcXLRD()
-        totalrow = sheet.nrows-12
+        totalrow = sheet.nrows-10
 
-        tmp = self.get_cell_range(10, 14, 10, totalrow)
+        tmp = self.get_cell_range(10, 10, 10, totalrow)
 
         evenVal = tmp[1:][::2]
 
         return evenVal
+
+
+    def SumDuplicate(self) :
+        brc = self.get_barcode()
+        qty = self.get_qty()
+
+        combine = [list(chain.from_iterable(x)) for x in zip(brc, qty)]
+
+        tmpRes = collections.defaultdict(int)
+
+        for item in combine:
+            a, value = item
+            tmpRes[a] += int(value)
+
+        result = [[a, total] for (a), total in tmpRes.items()]
+
+        return result
 
 
     # button convert CSV
@@ -167,10 +191,15 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
+        # filtering doublle barcode
+        filterDuplicate = self.SumDuplicate()
+
         # make as variabel
         ponum = self.get_ponum()
-        brc = self.get_barcode()
-        qty = self.get_qty()
+        # brc = self.get_barcode()
+        # qty = self.get_qty()
+        brc = [[i[0]] for i in filterDuplicate] # split filterDuplicate brc
+        qty = [[i[1]] for i in filterDuplicate] # split filterDuplicate qty
         mdl = self.get_mdl()
 
         # prepare write CSV
