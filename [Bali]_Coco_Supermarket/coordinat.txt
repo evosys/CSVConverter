@@ -1,0 +1,21 @@
+PO Number = java -jar tabula-java.jar  -a 126.066,78.466,135.734,172.178 -p 1 "$1"
+Barcode = java -jar tabula-java.jar  -a 180.359,30.866,840.809,107.472 -p 1 "$1"
+QTY = java -jar tabula-java.jar  -a 180.359,382.659,839.322,426.541 -p 1 "$1"
+Modal = java -jar tabula-java.jar  -a 179.616,309.028,838.578,382.659 -p 1 "$1"
+
+
+# PO Number
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 126.066,78.466,135.734,172.178 exmap.pdf
+
+# Barcode
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 180.359,30.866,840.809,107.472 exmap.pdf
+
+# QTY
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 180.359,382.659,839.322,426.541 exmap.pdf
+
+# Modal
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 179.616,309.028,838.578,382.659 exmap.pdf
+
+
+hooks file
+'pandas._libs.tslibs.timedeltas'
