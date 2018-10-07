@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-10-02 17:28:58
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-04 14:27:41
+# @Last Modified time: 2018-10-07 17:21:01
 import sys
 import time
 import os
@@ -164,7 +164,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         tmpResult = self.tabula(self.jarfile, crdnt, pathPDF)
 
-        result = self.checkListFloat(tmpResult, True)
+        result = self.checkListFloat(tmpResult)
 
         return result
 
@@ -172,10 +172,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     # check a list for float type value
     def checkListFloat(self, arList, isfloat = False) :
         result = []
-        for _i in arList:
-            if self.checkFLoat(_i) :
-                result.append([int(float(_i))])
-            else :
+
+        if isfloat :
+            for _i in arList:
+                if self.checkFLoat(_i) :
+                    result.append([int(float(_i))])
+        else :
+            for _i in arList:
                 res = re.sub('[^\d\.,]', '', _i)
                 if res :
                     result.append([res])
@@ -206,7 +209,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
             resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
-            ponum = ''.join(self.PDFponum(pathPDF))
+            tmpponum = self.PDFponum(pathPDF)
+            ponum = tmpponum[0]
             brc = self.PDFbarcode(pathPDF)
             qty = self.PDFqty(pathPDF)
             mdl = self.PDFmodal(pathPDF)
@@ -237,7 +241,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                 self.open_file(str(resultPath))
 
         else :
-            msg = "`java -version` faild. `java` command is not found from this Python process. Please ensure Java is installed and PATH is set for `java`"
+            msg = "``java` command is not found in this system. Please ensure Java is installed and PATH is set for `java`"
 
             QMessageBox.critical(self, "Error", msg, QMessageBox.Ok)
 
