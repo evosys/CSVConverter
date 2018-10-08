@@ -1,0 +1,15 @@
+# PO Number
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 76.883,458.618,89.888,594.023 file.pdf
+
+# Barcode
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 139.613,28.688,789.863,99.833 file.pdf
+
+# QTY
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 139.613,341.573,789.863,382.883 file.pdf
+
+# Modal
+java -jar tabula/tabula-1.0.2-jar-with-dependencies.jar -p all -a 139.613,401.243,789.863,468.563 file.pdf
+
+
+hooks file
+'pandas._libs.tslibs.timedeltas'
