@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Author: ichadhr
-# @Date:   2018-10-02 17:40:03
-# @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-02 17:40:25
-# -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file 'gui.ui'
 #
@@ -16,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(327, 132)
+        MainWindow.resize(331, 157)
         MainWindow.setMinimumSize(QtCore.QSize(1, 0))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 1000))
         MainWindow.setAutoFillBackground(False)
@@ -32,24 +27,17 @@ class Ui_MainWindow(object):
         self.edFile.setReadOnly(True)
         self.edFile.setObjectName("edFile")
         self.btCnv = QtWidgets.QPushButton(self.centralwidget)
-        self.btCnv.setGeometry(QtCore.QRect(90, 60, 151, 41))
+        self.btCnv.setGeometry(QtCore.QRect(90, 99, 151, 41))
         self.btCnv.setObjectName("btCnv")
         self.lbPath = QtWidgets.QLabel(self.centralwidget)
         self.lbPath.setGeometry(QtCore.QRect(20, 40, 47, 13))
         self.lbPath.setObjectName("lbPath")
-        self.lbLoading = QtWidgets.QLabel(self.centralwidget)
-        self.lbLoading.setGeometry(QtCore.QRect(90, 105, 151, 20))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setWeight(50)
-        self.lbLoading.setFont(font)
-        self.lbLoading.setText("")
-        self.lbLoading.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbLoading.setObjectName("lbLoading")
+        self.cbOutlet = QtWidgets.QComboBox(self.centralwidget)
+        self.cbOutlet.setGeometry(QtCore.QRect(19, 55, 291, 22))
+        self.cbOutlet.setObjectName("cbOutlet")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 327, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 331, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)

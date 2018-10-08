@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-07-16 10:10:23
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-03 16:48:43
+# @Last Modified time: 2018-10-08 15:55:14
 import sys
 import time
 import os
@@ -27,7 +27,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '058562'
+CODE_STORE = '058545'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :

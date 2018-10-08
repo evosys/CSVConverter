@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-07-16 10:10:23
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-02 18:58:20
+# @Last Modified time: 2018-10-08 10:08:51
 import sys
 import time
 import os
@@ -152,7 +152,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         result = self.checkListFloat(tmp)
 
         # delete last list
-        del result[-1]
+        # del result[-1]
 
         return result
 

@@ -4,9 +4,9 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app.py'],
-             pathex=['E:\\Python\\CSVConverter\\[Bali]_Coco_Supermarket'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Bali]_Coco_Supermarket'],
              binaries=[],
-             datas=[('tabula/tabula-1.0.2-jar-with-dependencies.jar', 'tabula/')],
+             datas=[('tabula/bin/tabula-1.0.2-jar-with-dependencies.jar', 'tabula/bin/')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -18,16 +18,12 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          exclude_binaries=True,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           name='CSV_Converter',
           debug=False,
           strip=False,
           upx=False,
+          runtime_tmpdir=None,
           console=False , version='version.txt', icon='resources\\icon.ico')
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=False,
-               name='CSV_Converter')

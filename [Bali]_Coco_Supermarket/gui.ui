@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
-    <height>132</height>
+    <width>331</width>
+    <height>157</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -65,7 +65,7 @@
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>60</y>
+      <y>99</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -87,27 +87,14 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbLoading">
+   <widget class="QComboBox" name="cbOutlet">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>105</y>
-      <width>151</width>
-      <height>20</height>
+      <x>19</x>
+      <y>55</y>
+      <width>291</width>
+      <height>22</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -116,7 +103,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>327</width>
+     <width>331</width>
      <height>21</height>
     </rect>
    </property>

@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['eramart_pelita.py'],
-             pathex=['E:\\Python\\CSVConverter\\[Samarinda]_Eramart'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Samarinda]_Eramart'],
              binaries=[],
              datas=[],
              hiddenimports=[],

@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-10-02 17:28:58
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-07 17:21:01
+# @Last Modified time: 2018-10-08 14:15:15
 import sys
 import time
 import os
@@ -30,7 +30,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '047361'
+# CODE_STORE = '047361'
 
 IS_WIN32 = 'win32' in str(sys.platform).lower()
 
@@ -59,13 +59,20 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.move(tr.topLeft())
 
         # path tabula
-        self.jarfile = resource_path("tabula/tabula-1.0.2-jar-with-dependencies.jar")
+        self.jarfile = resource_path("tabula/bin/tabula-1.0.2-jar-with-dependencies.jar")
 
         # button Open
         self.btOpen.clicked.connect(self.openPDF)
 
         # button convert
         self.btCnv.clicked.connect(self.BtnCnv)
+
+        # add item to combobox
+        self.cbOutlet.addItem('COCO MART DC', '058616')
+        self.cbOutlet.addItem('COCO MART MUMBUL', '058605')
+        self.cbOutlet.addItem('COCO MART JIMBARAN', '050018')
+        self.cbOutlet.addItem('COCO MART BATUBULAN 13206/43006', '047375')
+        self.cbOutlet.addItem('COCO SUPERMARKET UBUD 13208/43008', '047361')
 
         # status bar
         self.statusBar().showMessage('v'+appinfo._version)
@@ -209,6 +216,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
             resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
+            CODE_STORE = str(self.cbOutlet.itemData(self.cbOutlet.currentIndex()))
             tmpponum = self.PDFponum(pathPDF)
             ponum = tmpponum[0]
             brc = self.PDFbarcode(pathPDF)
