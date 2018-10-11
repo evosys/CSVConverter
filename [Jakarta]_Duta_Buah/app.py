@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # @Author: ichadhr
-# @Date:   2018-07-12 13:19:06
+# @Date:   2018-07-16 10:10:23
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-08 17:21:13
-
+# @Last Modified time: 2018-10-11 09:43:14
 import sys
 import time
 import os
-import eramart_pelita_info as appinfo
+import appinfo
 import itertools
-import string
+import re
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -18,6 +17,8 @@ from gui import Ui_MainWindow
 from pathlib import Path
 import xlrd
 import distutils.dir_util
+from itertools import chain
+from collections import defaultdict, OrderedDict
 
 # variabel for header CSV
 HEAD_CODE_STORE = 'code_store'
@@ -29,7 +30,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '443222'
+CODE_STORE = '004000'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -62,7 +63,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # PATH FILE
     def openXLS(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","XLS Files (*.xls)")
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","Excel Files (*.xls *.xlsx)")
         if fileName:
             self.lbPath.setText(fileName)
             x = QUrl.fromLocalFile(fileName).fileName()
@@ -97,13 +98,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
 
-        if os.path.exists(resPathFile) :
-            os.remove(resPathFile)
+        if os.path.exists(str(resPathFile)) :
+            os.remove(str(resPathFile))
         else :
             # os.makedirs(os.path.dirname(resPathFile), exist_ok=True)
-            distutils.dir_util.mkpath(os.path.dirname(resPathFile))
+            distutils.dir_util.mkpath(os.path.dirname(str(resPathFile)))
 
-        return resPathFile
+        return str(resPathFile)
 
 
     # open file
@@ -121,161 +122,133 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         return [sheet.row_values(row, start_colx=start_col, end_colx=end_col+1) for row in range(start_row, end_row+1)]
 
 
-    # get PO Number
-    def getPONO(self) :
-        result = []
-        fr = []
-
-        accepted = ['PO']
-
+    # get PO number
+    def get_ponum(self) :
         sheet = self.funcXLRD()
 
-        totRow = sheet.nrows - 1
-
-        newlist = self.get_cell_range(2, 0, 2, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if any(ignore in el for ignore in accepted)])
-
-        for x in fr :
-            for k in x :
-                if k != "" :
-                    result.append(k)
+        result = sheet.cell_value(rowx=2, colx=2)
 
         return result
-
-
 
     # get Barcode
-    def getBRC(self) :
-        result = []
-        fr = []
-
-        rmoving = list(string.ascii_lowercase) + list(string.ascii_uppercase)
-
+    def get_brc(self) :
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows - 1
 
-        totRow = sheet.nrows - 1
+        tmp = self.get_cell_range(1, 0, 1, totalrow)
 
-        newlist = self.get_cell_range(1, 0, 1, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
-
-        for x in fr :
-            for k in x :
-                if k != "" :
-                    result.append(k)
+        result = self.checkListFloat(tmp, True)
 
         return result
-
 
     # get QTY
-    def getQTY(self) :
-        result = []
-        fr = []
-
-        alpha = list(string.ascii_lowercase) + list(string.ascii_uppercase)
-        rmoving = ['/'] + alpha
-
+    def get_qty(self) :
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows - 1
 
-        totRow = sheet.nrows - 1
+        tmp = self.get_cell_range(3, 0, 3, totalrow)
 
-        newlist = self.get_cell_range(7, 0, 7, totRow)
-
-        for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
-
-        for x in fr :
-            for k in x :
-                if k != "" :
-                    result.append(k)
+        result = self.checkListFloat(tmp, True)
 
         return result
 
 
-    # get Modal
-    def getMDL(self) :
-        result = []
-        fr = []
-
-        rmoving = list(string.ascii_lowercase) + list(string.ascii_uppercase)
-
+    # get modal karton
+    def get_mdl(self) :
         sheet = self.funcXLRD()
+        totalrow = sheet.nrows - 1
 
-        totRow = sheet.nrows - 1
+        tmp = self.get_cell_range(5, 0, 5, totalrow)
 
-        newlist = self.get_cell_range(11, 0, 11, totRow)
+        result = self.checkListFloat(tmp)
 
-        for sublist in newlist :
-            fr.append([el for el in sublist if not any(ignore in el for ignore in rmoving)])
-
-        for x in fr :
-            for k in x :
-                if k != "" :
-                    res = str(k).split(',')[0]
-                    result.append(res.replace(".", ""))
 
         return result
 
 
-    def grouper(self, iterable, n, fillvalue=None) :
-        "Collect data into fixed-length chunks or blocks"
-        # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
-        args = [iter(iterable)] * n
-        return itertools.zip_longest(fillvalue=fillvalue, *args)
+    def SumDuplicate(self) :
+        brc = self.get_brc()
+        qty = self.get_qty()
+        mdl = self.get_mdl()
+
+        combine = [list(chain.from_iterable(x)) for x in zip(brc, qty, mdl)]
+
+        tmpRes = defaultdict(int)
+
+        for item in combine:
+            a, value, c = item
+            tmpRes[a, c] += int(value)
+
+        result = [[a, c, total] for (a, c), total in tmpRes.items()]
+
+        return result
+
+
+    # check a list for float type value
+    def checkListFloat(self, arList, isfloat = False) :
+        result = []
+
+        if isfloat :
+            for _i in arList :
+                for _x in _i :
+                    if self.checkFLoat(_x) :
+                        result.append([int(float(_x))])
+        else :
+            for _i in arList:
+                res = re.sub('[^\d\.,]', '', str(_i))
+                if res :
+                    result.append([res])
+
+        return result
+
+
+    # check float
+    def checkFLoat(self, value) :
+        try :
+            return float(value).is_integer()
+        except ValueError:
+            return False
+
 
     # button convert CSV
     def BtnCnv(self) :
-
-        # current dir
         current_dir = os.getcwd()
-
+        # PATH file
+        pathXLS = self.lbPath.text()
+        resPath, resFilename = os.path.split(os.path.splitext(pathXLS)[0])
+        resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
+        # filtering doublle barcode
+        filterDuplicate = self.SumDuplicate()
+
         # make as variabel
-        ponum = self.getPONO()
-        brc = self.getBRC()
-        qty = self.getQTY()
-        mdl = self.getMDL()
+        ponum = self.get_ponum()
+        # brc = self.get_barcode()
+        # qty = self.get_qty()
+        brc = [[i[0]] for i in filterDuplicate] # split filterDuplicate brc
+        mdl = [[i[1]] for i in filterDuplicate] # split filterDuplicate qty
+        qty = [[i[2]] for i in filterDuplicate] # split filterDuplicate mdl
 
-        # cut every 40 item
-        brc40 = list(self.grouper(brc, 40))
-        qty40 = list(self.grouper(qty, 40))
-        mdl40 = list(self.grouper(mdl, 40))
-
-        for x, (tmpBRC, tmpQTY, tmpMDL, tmpPONO) in enumerate(zip(brc40, qty40, mdl40, ponum)) :
-
-            # convert from tuple to list
-            tmpBRC = list(tmpBRC)
-            tmpQTY = list(tmpQTY)
-            tmpMDL = list(tmpMDL)
-
-            # remove None value
-            tmpBRC = [i for i in tmpBRC if i is not None]
-
-            filename = tmpPONO.replace("/", "-")
-
-            resPathFile = self.CreateDir(current_dir, NEWDIR, filename)
-
-            # prepare write CSV
-            with open(resPathFile, "w+") as csv :
+        # prepare write CSV
+        with open(resPathFile, "w+") as csv :
 
             # write first header
-                csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
+            csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
 
-                # write new line
-                csv.write("\n")
+            # write new line
+            csv.write("\n")
 
+            for br, qt, md in zip(brc, qty, mdl) :
+                for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(CODE_STORE, len(br)), itertools.repeat(ponum, len(br)), br, qt, md) :
 
-                for resCD, resBRC, resQTY, resMDL in zip(itertools.repeat(CODE_STORE, len(tmpBRC)), tmpBRC, tmpQTY, tmpMDL) :
+                    resBC = str(resBC)
+                    resQT = str(resQT)
+                    resMD = str(resMD)
 
-                    resQTY = resQTY.strip()
+                    csv.write(resCD+DELIM+resPO+DELIM+resBC+DELIM+resQT+DELIM+resMD+'\n')
 
-                    csv.write(str(resCD)+DELIM+str(ponum[x])+DELIM+str(resBRC)+DELIM+str(resQTY)+DELIM+str(resMDL)+'\n')
-
-                csv.close()
+            csv.close()
 
         reply = QMessageBox.information(self, "Information", "Success!", QMessageBox.Ok)
 

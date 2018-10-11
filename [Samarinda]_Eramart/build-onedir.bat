@@ -1,7 +1,7 @@
 @REM @Author: ichadhr
 @REM @Date:   2018-07-11 10:50:15
 @REM @Last Modified by:   richard.hari@live.com
-@REM Modified time: 2018-10-08 16:53:57
+@REM Modified time: 2018-10-10 14:22:03
 
 pyinstaller --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_Converter_era-500-lembuswana" --key=68b00c755cef892e512d56621925d836 --version-file=version.txt era_500_lembuswana.py
 
@@ -13,3 +13,9 @@ pyinstaller --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_C
 
 
 pyinstaller --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_Converter_eramart-suryanata-1" --key=68b00c755cef892e512d56621925d836 --version-file=version.txt eramart_suryanata_1.py
+
+
+pyinstaller --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_Converter_eramart_citowns" --key=68b00c755cef892e512d56621925d836 --version-file=version.txt eramart_citowns.py
+
+
+pyinstaller --clean --noconsole --noupx --icon=resources\\icon.ico --name="CSV_Converter_eramart_sempaja" --key=68b00c755cef892e512d56621925d836 --version-file=version.txt eramart_sempaja.py

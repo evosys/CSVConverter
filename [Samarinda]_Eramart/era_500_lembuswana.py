@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+# @Author: ichadhr
+# @Date:   2018-07-11 10:50:24
+# @Last Modified by:   richard.hari@live.com
+# @Last Modified time: 2018-10-08 17:21:30
+
 import sys
 import time
 import os
-import era_500_lembuswana_info
+import era_500_lembuswana_info as appinfo
 import itertools
 import string
 from PyQt5 import QtCore, QtWidgets
@@ -47,7 +53,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.btCnv.clicked.connect(self.BtnCnv)
 
         # status bar
-        self.statusBar().showMessage('v'+era_500_lembuswana_info._version)
+        self.statusBar().showMessage('v'+appinfo._version)
 
         # hide label path
         self.lbPath.hide()
@@ -320,7 +326,7 @@ if __name__ == '__main__' :
     time.sleep(1)
 
     window = mainWindow()
-    window.setWindowTitle(era_500_lembuswana_info._appname)
+    window.setWindowTitle(appinfo._appname)
     # window.setWindowFlags(QtCore.Qt.WindowCloseButtonHint)
     # window.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
     window.show()
