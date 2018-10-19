@@ -2,11 +2,11 @@
 # @Author: ichadhr
 # @Date:   2018-10-08 16:43:06
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-15 09:48:32
+# @Last Modified time: 2018-10-19 10:43:23
 import sys
 import time
 import os
-import eramart_suryanata_1_info as appinfo
+import era_500_seberang_info as appinfo
 import itertools
 import string
 import re
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from gui import Ui_MainWindow
+from gui2 import Ui_MainWindow
 from pathlib import Path
 import xlrd
 import distutils.dir_util
@@ -29,7 +29,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '443227'
+CODE_STORE = '443257'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -54,6 +54,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         # status bar
         self.statusBar().showMessage('v'+appinfo._version)
+
+        # self.chkOt.stateChanged.connect(self.chOt)
 
         # hide label path
         self.lbPath.hide()
@@ -96,8 +98,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     def CreateDir(self, cDIR, nDir, filename) :
 
         resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
-
-        resPathFile = str(resPathFile)
 
         if os.path.exists(resPathFile) :
             os.remove(resPathFile)
@@ -224,6 +224,72 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             return False
 
 
+    # get PO Number simple
+    def getPONO_(self) :
+        result = []
+        fr = []
+
+        accepted = ['PO']
+
+        sheet = self.funcXLRD()
+
+        totRow = sheet.nrows - 1
+
+        newlist = self.get_cell_range(2, 0, 2, totRow)
+
+        for sublist in newlist :
+            fr.append([el for el in sublist if any(ignore in el for ignore in accepted)])
+
+        for x in fr :
+            for k in x :
+                if k != "" :
+                    result.append(k)
+
+        return result
+
+
+    # get Barcode simple
+    def getBRC_(self) :
+
+        sheet = self.funcXLRD()
+
+        totRow = sheet.nrows - 1
+
+        tmpResult = self.get_cell_range(1, 0, 1, totRow)
+
+        result = self.checkListFloat(tmpResult, True)
+
+        return result
+
+
+    # get QTY simple
+    def getQTY_(self) :
+
+        sheet = self.funcXLRD()
+
+        totRow = sheet.nrows - 1
+
+        tmpResult = self.get_cell_range(7, 0, 7, totRow)
+
+        result = self.checkListFloat(tmpResult, True)
+
+        return result
+
+
+    # get Modal simple
+    def getMDL_(self) :
+
+        sheet = self.funcXLRD()
+
+        totRow = sheet.nrows - 1
+
+        tmpResult = self.get_cell_range(11, 0, 11, totRow)
+
+        result = self.checkListFloat(tmpResult)
+
+        return result
+
+
     # button convert CSV
     def BtnCnv(self) :
 
@@ -232,11 +298,22 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
-        # make as variabel
-        ponum = self.getPONO()
-        brc = self.getBRC()
-        qty = self.getQTY()
-        mdl = self.getMDL()
+        if self.chkOt.isChecked() :
+
+            # make as variabel
+            ponum = self.getPONO()
+            brc = self.getBRC()
+            qty = self.getQTY()
+            mdl = self.getMDL()
+
+        else :
+
+            # make as variabel
+            ponum = self.getPONO_()
+            brc = self.getBRC_()
+            qty = self.getQTY_()
+            mdl = self.getMDL_()
+
 
         # cut every 40 item
         brc40 = list(self.grouper(brc, 40))
@@ -255,10 +332,10 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
             filename = tmpPONO.replace("/", "-")
 
-            resPathFile = self.CreateDir(current_dir, NEWDIR, filename)
+            resultPathFile = self.CreateDir(current_dir, NEWDIR, filename)
 
             # prepare write CSV
-            with open(resPathFile, "w+") as csv :
+            with open(resultPathFile, "w+") as csv :
 
             # write first header
                 csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
@@ -272,11 +349,18 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
                 csv.close()
 
-        reply = QMessageBox.information(self, "Information", "Success!", QMessageBox.Ok)
+        if len(brc) > 0 :
+            reply = QMessageBox.information(self, "Information", "Success!", QMessageBox.Ok)
 
-        if reply == QMessageBox.Ok :
-            self.open_file(str(resultPath))
-            print(resultPath)
+            if reply == QMessageBox.Ok :
+                self.open_file(str(resultPath))
+        else :
+            if self.chkOt.isChecked() :
+                reply = QMessageBox.warning(self, "Warning", "No output please uncheck 'Extended' box", QMessageBox.Ok)
+            else :
+                reply = QMessageBox.warning(self, "Warning", "No output please check 'Extended' box", QMessageBox.Ok)
+
+
 
 
 if __name__ == '__main__' :

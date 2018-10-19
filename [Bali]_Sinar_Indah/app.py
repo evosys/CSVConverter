@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-07-16 10:10:23
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-03 14:57:35
+# @Last Modified time: 2018-10-12 11:43:12
 import sys
 import time
 import os
@@ -138,7 +138,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         tmp = self.get_cell_range(2, 0, 2, totalrow)
 
-        result = self.checkListFloat(tmp)
+        result = self.checkListFloat(tmp, True)
 
         return result
 
@@ -149,19 +149,9 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         tmp = self.get_cell_range(9, 0, 9, totalrow)
 
-        # delete first 8 list
-        del tmp[:8]
+        result = self.checkListFloat(tmp, True)
 
-        # delete last 1 list
-        del tmp[-1]
-
-
-        # result = self.checkListFloat(tmp)
-
-        # delete last list
-        # del result[-1]
-
-        return tmp
+        return result
 
 
     # get modal karton
@@ -171,65 +161,29 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         tmp = self.get_cell_range(5, 0, 5, totalrow)
 
-        # remove empty list
-        tmp = [sublist for sublist in tmp if any(sublist)]
-
-        # rstrip
-        tmp = [[s.strip() for s in nested] for nested in tmp]
-
-        # delete first 5 list
-        # del tmp[5-]
-        del tmp[:5]
-
-        # delete last list
-        del tmp[-1]
-
-        result = tmp[::2]
-
+        result = self.checkListFloat(tmp, True)
 
         return result
-
-
-    def SumDuplicate(self) :
-        result = []
-        brc = self.get_brc()
-        qty = self.get_qty()
-        # mdl = self.get_mdl()
-
-        combine = [list(chain.from_iterable(x)) for x in zip(brc, qty)]
-
-
-        for _i in range(len(combine)) :
-            if self.on_board(combine, _i) :
-                result.append(combine[_i])
-
-
-        return result
-
-
-    # remove empty and non float value
-    def on_board(self, board, x):
-        try:
-            x = board[int(x)][1]
-            float(x)
-        except (ValueError, IndexError):
-            return False
-        else:
-            return True
 
 
     # check a list for float type value
-    def checkListFloat(self, arList, key = True) :
+    def checkListFloat(self, arList, isfloat = False) :
         result = []
-        for _i in arList:
-            for _x in _i :
-                if self.checkFLoat(_x) :
-                    if key :
-                        result.append([int(_x)])
-                    else :
-                        result.append([_x])
+
+        if isfloat :
+            for _i in arList:
+                for _x in _i :
+                    if self.checkFLoat(_x) :
+                        result.append([int(float(_x))])
+        else :
+            for _i in arList:
+                for _x in _i :
+                    res = re.sub('[^\d\.,]', '', str(_x))
+                    if res :
+                        result.append([res])
 
         return result
+
 
     # check float
     def checkFLoat(self, value) :
@@ -237,7 +191,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             return float(value).is_integer()
         except ValueError:
             return False
-
 
     # button convert CSV
     def BtnCnv(self) :
@@ -248,15 +201,10 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
-        # filtering doublle barcode
-        filterDuplicate = self.SumDuplicate()
-
         # make as variabel
         ponum = self.get_ponum()
-        # brc = self.get_barcode()
-        # qty = self.get_qty()
-        brc = [[i[0]] for i in filterDuplicate] # split filterDuplicate brc
-        qty = [[i[1]] for i in filterDuplicate] # split filterDuplicate qty
+        brc = self.get_brc()
+        qty = self.get_qty()
         mdl = '1'
 
         # prepare write CSV

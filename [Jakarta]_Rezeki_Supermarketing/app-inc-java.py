@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-10-02 17:28:58
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-08 14:19:13
+# @Last Modified time: 2018-10-18 10:09:14
 import sys
 import time
 import os
@@ -197,7 +197,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # button convert CSV
     def BtnCnv(self) :
-
 
         current_dir = os.getcwd()
 

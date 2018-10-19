@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-10-02 17:28:58
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-08 14:15:30
+# @Last Modified time: 2018-10-18 10:09:00
 import sys
 import time
 import os
@@ -196,7 +196,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             return False
 
     # button convert CSV
-    def BtnCnv1(self) :
+    def BtnCnv(self) :
 
         checkJava = distutils.spawn.find_executable("java")
 

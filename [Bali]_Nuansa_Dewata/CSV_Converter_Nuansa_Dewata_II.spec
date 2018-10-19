@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app-nuansa-dewata-II.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Bali]_Nuansa_Dewata'],
+             pathex=['E:\\Python\\CSVConverter\\[Bali]_Nuansa_Dewata'],
              binaries=[],
              datas=[],
              hiddenimports=[],

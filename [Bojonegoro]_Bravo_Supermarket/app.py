@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: ichadhr
+# @Date:   2018-08-13 13:20:49
+# @Last Modified by:   richard.hari@live.com
+# @Last Modified time: 2018-10-18 17:19:17
 import sys
 import time
 import os
@@ -56,18 +61,51 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # PATH FILE
     def openXLS(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","XLS Files (*.xls)")
-        if fileName:
-            self.lbPath.setText(fileName)
-            x = QUrl.fromLocalFile(fileName).fileName()
-            self.edFile.setText(x)
+        pathFiles = []
+        listFiles = []
+        fileNames, _ = QFileDialog.getOpenFileNames(self,"Open File", "","XLS Files (*.xls)")
+        if fileNames:
+            for _i in fileNames :
+                Fnames = QUrl.fromLocalFile(_i).fileName()
+                listFiles.append(Fnames)
+                pathFiles.append(_i)
+
+            lblFiles = "✣ ".join(pathFiles)
+            txtFiles = " | ".join(listFiles)
+
+            self.lbPath.setText(lblFiles)
+            self.edFile.setText(txtFiles)
             self.edFile.setStyleSheet("""QLineEdit { color: green }""")
+
+    def combine_list(self, pathFiles) :
+        result = []
+
+        for _i in pathFiles :
+            result.append(_i)
+
+        return result
+
+
+
+    def BtnCnv(self) :
+
+        pathFile = self.lbPath.text()
+        pathFiles = pathFile.split('✣')
+
+
+        brc =
+
+
+        for _x in pathFiles :
+            brc = self.getBRC(_x)
+
+        print(brc)
 
 
     # function xlrd
-    def funcXLRD(self) :
+    def funcXLRD(self, pathXLS) :
         # PATH file
-        pathXLS = self.lbPath.text()
+        # pathXLS = self.lbPath.text()
 
         if len(pathXLS) == 0:
 
@@ -87,8 +125,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
 
     # function get cell range
-    def get_cell_range(self, start_col, start_row, end_col, end_row):
-        sheet = self.funcXLRD()
+    def get_cell_range(self, pathFile, start_col, start_row, end_col, end_row):
+        sheet = self.funcXLRD(pathFile)
         return [sheet.row_values(row, start_colx=start_col, end_colx=end_col+1) for row in range(start_row, end_row+1)]
 
 
@@ -116,21 +154,21 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
 
     # Get Barcode
-    def getPONO(self) :
+    def getPONO(self, pathFile) :
 
-        result = self.get_cell_range(1, 5, 1, 5)
+        result = self.get_cell_range(pathFile, 1, 5, 1, 5)
         return result[0][0]
 
 
     # Get Barcode
-    def getBRC(self) :
+    def getBRC(self, pathFile) :
 
         result = []
 
-        sheet = self.funcXLRD()
+        sheet = self.funcXLRD(pathFile)
         totalrow = sheet.nrows-1
 
-        rh = self.get_cell_range(2, 0, 2, totalrow)
+        rh = self.get_cell_range(pathFile, 2, 0, 2, totalrow)
 
         for z in rh :
             filt = filter(None, z)
@@ -143,13 +181,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
 
     # get Quantity
-    def getQTY(self) :
+    def getQTY(self, pathFile) :
         result = []
 
-        sheet = self.funcXLRD()
+        sheet = self.funcXLRD(pathFile)
         totalrow = sheet.nrows-1
 
-        rh = self.get_cell_range(7, 0, 7, totalrow)
+        rh = self.get_cell_range(pathFile, 7, 0, 7, totalrow)
 
         for z in rh :
             filt = filter(None, z)
@@ -163,13 +201,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
 
     # Get Modal
-    def getMDL(self) :
+    def getMDL(self, pathFile) :
         result = []
 
-        sheet = self.funcXLRD()
+        sheet = self.funcXLRD(pathFile)
         totalrow = sheet.nrows-1
 
-        rh = self.get_cell_range(9, 0, 9, totalrow)
+        rh = self.get_cell_range(pathFile, 9, 0, 9, totalrow)
 
         for z in rh :
             filt = filter(None, z)
@@ -182,7 +220,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         return result
 
 
-    def BtnCnv(self) :
+    def BtnCnv1(self) :
         current_dir = os.getcwd()
         # PATH file
         pathXLS = self.lbPath.text()

@@ -3,8 +3,8 @@
 block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
-a = Analysis(['app-nusa-dewata.py'],
-             pathex=['E:\\Python\\CSVConverter\\[Bali]_Nuansa_Dewata'],
+a = Analysis(['era_500_seberang.py'],
+             pathex=['E:\\Python\\CSVConverter\\[Samarinda]_Eramart'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -19,15 +19,15 @@ pyz = PYZ(a.pure, a.zipped_data,
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
-          name='CSV_Converter_Nusa_Dewata',
+          name='CSV_Converter_era_500_seberang',
           debug=False,
           strip=False,
           upx=False,
-          console=False , version='version.txt', icon='resources\\icon.ico')
+          console=False , version='version_2.txt', icon='resources\\icon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
                upx=False,
-               name='CSV_Converter_Nusa_Dewata')
+               name='CSV_Converter_era_500_seberang')
