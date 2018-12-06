@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Bali]_Coco_Supermarket'],
+             pathex=['E:\\Python\\CSVConverter\\[Bali]_Coco_Supermarket'],
              binaries=[],
              datas=[('tabula/bin/tabula-1.0.2-jar-with-dependencies.jar', 'tabula/bin/')],
              hiddenimports=[],

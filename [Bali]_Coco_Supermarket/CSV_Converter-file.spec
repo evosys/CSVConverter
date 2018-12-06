@@ -4,7 +4,7 @@ block_cipher = pyi_crypto.PyiBlockCipher(key='68b00c755cef892e512d56621925d836')
 
 
 a = Analysis(['app-inc-java.py'],
-             pathex=['D:\\Development\\Python\\CSVConverter\\[Jakarta]_Rezeki_Supermarketing'],
+             pathex=['D:\\Development\\Python\\CSVConverter\\[Bali]_Coco_Supermarket'],
              binaries=[],
              datas=[],
              hiddenimports=[],

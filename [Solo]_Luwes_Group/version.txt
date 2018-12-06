@@ -1,7 +1,7 @@
 VSVersionInfo(
     ffi=FixedFileInfo(
-        filevers=(1, 0, 1, 0),
-        prodvers=(1, 0, 1, 0),
+        filevers=(1, 0, 2, 0),
+        prodvers=(1, 0, 2, 0),
         mask=0x3f,
         flags=0x0,
         OS=0x40004,
@@ -18,13 +18,13 @@ VSVersionInfo(
             StringStruct('Comments', 'Designed and coded by richard.hari@live.com'),
             StringStruct('CompanyName', 'Unilever'),
             StringStruct('FileDescription', 'CSV Converter'),
-            StringStruct('FileVersion', '1, 0, 1, 0'),
+            StringStruct('FileVersion', '1, 0, 2, 0'),
             StringStruct('InternalName', 'CSV Converter'),
             StringStruct('LegalCopyright', '(2018) richard.hari@live.com.'),
             StringStruct('LegalTrademarks', 'N/A'),
             StringStruct('OriginalFilename', 'CSV_Converter.exe'),
             StringStruct('ProductName', 'CSV Converter'),
-            StringStruct('ProductVersion', '1, 0, 1, 0')
+            StringStruct('ProductVersion', '1, 0, 2, 0')
             ]
         )
         ]

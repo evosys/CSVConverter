@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-08-13 13:20:49
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-18 17:19:17
+# @Last Modified time: 2018-10-19 11:34:24
 import sys
 import time
 import os
@@ -93,11 +93,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         pathFiles = pathFile.split('✣')
 
 
-        brc =
-
-
         for _x in pathFiles :
-            brc = self.getBRC(_x)
+            brc = self.getBRC(_x.tream())
 
         print(brc)
 

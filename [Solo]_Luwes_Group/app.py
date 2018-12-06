@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Author: ichadhr
+# @Date:   2018-08-29 16:47:14
+# @Last Modified by:   richard.hari@live.com
+# @Last Modified time: 2018-12-06 10:34:58
 import sys
 import time
 import os
@@ -52,9 +57,11 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         # add item to combobox
         self.cbOutlet.addItem('BENGAWAN MULTI TRADING / LNSK, CV.', '378977')
+        self.cbOutlet.addItem('BENGAWAN RETAIL MANDIRI, PT.', '378966')
         self.cbOutlet.addItem('LUWES GADING', '378938')
         self.cbOutlet.addItem('LUWES GENTAN', '378988')
         self.cbOutlet.addItem('LUWES KESTALAN', '378983')
+        self.cbOutlet.addItem('LUWES DELANGGU', '378976')
 
         # status bar
         self.statusBar().showMessage('v'+appinfo._version)
@@ -62,7 +69,6 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         # hide label Proucts Data
         self.lbPD.hide()
         self.lbPD.clear()
-
 
         # hide label Purchase Order
         self.lbPO.hide()
@@ -79,7 +85,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             self.edPO.setStyleSheet("""QLineEdit { color: green }""")
 
     def openXLSPD(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open Products Data", "","XLSX Files (*.xlsx)")
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open Products Data", "","XLS Files (*.xls)")
         if fileName:
             self.lbPD.setText(fileName)
             x = QUrl.fromLocalFile(fileName).fileName()
@@ -109,14 +115,14 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                     return sheet
 
                 except xlrd.XLRDError as e:
-                    msg = "The '.xlsx' file has been corrupted."
+                    msg = "The '.xls' file has been corrupted."
                     errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
                     sys.exit(0)
         else :
             pathXLS = self.lbPD.text()
             if len(pathXLS) == 0:
 
-                reply = QMessageBox.warning(self, "Warning", "Please select Products Data file first!", QMessageBox.Ok)
+                reply = QMessageBox.warning(self, "Warning", "Please select Master Data file first!", QMessageBox.Ok)
 
                 if reply == QMessageBox.Ok :
                     return False
@@ -129,7 +135,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                     return sheet
 
                 except xlrd.XLRDError as e:
-                    msg = "The '.xlsx' file has been corrupted."
+                    msg = "The '.xls' file has been corrupted."
                     errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
                     sys.exit(0)
 
@@ -220,7 +226,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if sheet :
 
-            rh = self.get_cell_range(3, 8, 3, 8, True)
+            rh = self.get_cell_range(3, 3, 3, 3, True)
 
             return rh
 
@@ -402,7 +408,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if len(pathXLSPD) == 0:
 
-            reply = QMessageBox.warning(self, "Warning", "Please select Products Data file first!", QMessageBox.Ok)
+            reply = QMessageBox.warning(self, "Warning", "Please select Master Data file first!", QMessageBox.Ok)
 
         else :
 

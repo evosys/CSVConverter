@@ -2,7 +2,7 @@
 # @Author: ichadhr
 # @Date:   2018-10-08 16:43:06
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-10-15 09:48:32
+# @Last Modified time: 2018-11-09 13:15:07
 import sys
 import time
 import os
@@ -223,9 +223,15 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         except ValueError:
             return False
 
+    def BtnCnv(self) :
+        x = self.getMDL()
+
+        print(x)
+
+
 
     # button convert CSV
-    def BtnCnv(self) :
+    def BtnCnv1(self) :
 
         # current dir
         current_dir = os.getcwd()
