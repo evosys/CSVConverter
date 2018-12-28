@@ -1,23 +1,20 @@
-# -*- coding: utf-8 -*-
-# @Author: ichadhr
-# @Date:   2018-07-16 10:10:23
-# @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-12-20 11:51:18
+import os
 import sys
 import time
-import os
-import appinfo
+import re
 import itertools
+import appinfo
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from gui import Ui_MainWindow
 from pathlib import Path
-import xlrd
+import string
+
 import distutils.dir_util
-from itertools import chain
-from collections import defaultdict, OrderedDict
+
+import xlrd
 
 # variabel for header CSV
 HEAD_CODE_STORE = 'code_store'
@@ -29,7 +26,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '015419'
+CODE_STORE = '397760'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -60,9 +57,17 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.lbPath.clear()
 
 
+    # get last row
+    def getLastRow(self) :
+        res = []
+        sheet = self.funcXLRD()
+
+        return sheet.nrows
+
+
     # PATH FILE
     def openXLS(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","Excel Files (*.xls, *.xlsx)")
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open File", "","XLS Files (*.xls)")
         if fileName:
             self.lbPath.setText(fileName)
             x = QUrl.fromLocalFile(fileName).fileName()
@@ -75,31 +80,27 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         # PATH file
         pathXLS = self.lbPath.text()
 
+        if len(pathXLS) == 0:
 
-        try :
-            book = xlrd.open_workbook(pathXLS, ragged_rows=True)
-            sheet = book.sheet_by_index(0)
-
-            return sheet
-
-        except xlrd.XLRDError as e:
-            msg = "The '.xls' file has been corrupted."
-            errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
+            QMessageBox.warning(self, "Warning", "Please select XLS file first!", QMessageBox.Ok)
             sys.exit(0)
 
-
-    # create directory if not exist
-    def CreateDir(self, cDIR, nDir, filename) :
-
-        resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
-
-        if os.path.exists(str(resPathFile)) :
-            os.remove(str(resPathFile))
         else :
-            # os.makedirs(os.path.dirname(resPathFile), exist_ok=True)
-            distutils.dir_util.mkpath(os.path.dirname(str(resPathFile)))
+            try :
+                book = xlrd.open_workbook(pathXLS, ragged_rows=True)
+                sheet = book.sheet_by_index(0)
 
-        return str(resPathFile)
+                return sheet
+
+            except xlrd.XLRDError as e:
+                msg = "Unsupported format, or corrupt file !"
+                errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
+                sys.exit(0)
+
+    # function get cell range
+    def get_cell_range(self, start_col, start_row, end_col, end_row):
+        sheet = self.funcXLRD()
+        return [sheet.row_values(row, start_colx=start_col, end_colx=end_col+1) for row in range(start_row, end_row+1)]
 
 
     # open file
@@ -111,71 +112,55 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             subprocess.call([opener, filename])
 
 
-    # get cell range
-    def get_cell_range(self, start_col, start_row, end_col, end_row):
-        sheet = self.funcXLRD()
-        return [sheet.row_values(row, start_colx=start_col, end_colx=end_col+1) for row in range(start_row, end_row+1)]
+    # create directory if not exist
+    def CreateDir(self, cDIR, nDir, filename) :
+
+        resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
+
+        if os.path.exists(resPathFile) :
+            os.remove(resPathFile)
+        else :
+            # os.makedirs(os.path.dirname(resPathFile), exist_ok=True)
+            distutils.dir_util.mkpath(os.path.dirname(resPathFile))
+
+        return resPathFile
 
 
-    # get PO number
-    def get_ponum(self) :
-        sheet = self.funcXLRD()
+    # Get Barcode
+    def getPONO(self) :
 
-        result = sheet.cell_value(rowx=3, colx=3)
-
-        result = result[5:]
-
+        result = self.get_cell_range(0, 5, 0, 5)
         return result
 
-    # get Barcode
-    def get_barcode(self) :
-        sheet = self.funcXLRD()
-        totalrow = sheet.nrows - 1
+    # Get Barcode
+    def getBRC(self) :
 
-        tmp = self.get_cell_range(1, 10, 1, totalrow)
-
-        result = self.checkListFloat(tmp)
-
-        return result
-
-    # get QTY
-    def get_qty(self) :
-        sheet = self.funcXLRD()
-        totalrow = sheet.nrows - 1
-
-        tmp = self.get_cell_range(6, 10, 6, totalrow)
+        endrow  = self.getLastRow() - 1
+        tmp = self.get_cell_range(1, 0, 1, endrow)
 
         result = self.checkListFloat(tmp)
 
         return result
 
 
-    # get modal karton
-    def get_mdl(self) :
-        sheet = self.funcXLRD()
-        totalrow = sheet.nrows - 1
+    # Get Barcode
+    def getQTY(self) :
 
-        tmp = self.get_cell_range(7, 10, 7, totalrow)
+        endrow = self.getLastRow() - 1
+        tmp = self.get_cell_range(6, 0, 6, endrow)
 
         result = self.checkListFloat(tmp)
 
         return result
 
 
-    def SumDuplicate(self) :
-        brc = self.get_barcode()
-        qty = self.get_qty()
-        mdl = self.get_mdl()
+    # Get Barcode
+    def getMDL(self) :
 
-        combine = [list(chain.from_iterable(x)) for x in zip(brc, qty, mdl)]
+        endrow = self.getLastRow() - 1
+        tmp = self.get_cell_range(7, 0, 7, endrow)
 
-        tmpRes = defaultdict(int)
-
-        for item in combine:
-            a, value, c = item
-            tmpRes[a, c] += int(value)
-
-        result = [[a, c, total] for (a, c), total in tmpRes.items()]
+        result = self.checkListFloat(tmp)
 
         return result
 
@@ -191,8 +176,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                     else :
                         result.append([_x])
 
-
         return result
+
 
     # check float
     def checkFLoat(self, value) :
@@ -200,6 +185,20 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             return float(value).is_integer()
         except ValueError:
             return False
+
+
+    # format filename
+    def format_filename(self, s) :
+        valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+        filename = ''.join(c for c in s if c in valid_chars)
+        filename = filename.replace(' ','_') # I don't like spaces in filenames.
+        return filename
+
+
+    def BtnCnv1(self) :
+        x = self.getPONO()
+        print(x)
+        print(len(x))
 
 
     # button convert CSV
@@ -211,24 +210,16 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         resPathFile = self.CreateDir(current_dir, NEWDIR, resFilename)
         resultPath = Path(os.path.abspath(os.path.join(current_dir, NEWDIR)))
 
-        if len(pathXLS) == 0:
-            rep = QMessageBox.warning(self, "Warning", "Please select XLS file first!", QMessageBox.Ok)
-            if rep == QMessageBox.Ok :
-                return
-
-        # filtering doublle barcode
-        filterDuplicate = self.SumDuplicate()
-
         # make as variabel
-        ponum = self.get_ponum()
-        # brc = self.get_barcode()
-        # qty = self.get_qty()
-        brc = [[i[0]] for i in filterDuplicate] # split filterDuplicate brc
-        mdl = [[i[1]] for i in filterDuplicate] # split filterDuplicate qty
-        qty = [[i[2]] for i in filterDuplicate] # split filterDuplicate mdl
+        code_store = CODE_STORE
+        ponum = self.getPONO()
+        responum = self.format_filename(ponum[0][0])
+        brc = self.getBRC()
+        qty = self.getQTY()
+        mdl = self.getMDL()
 
         # prepare write CSV
-        with open(resPathFile, "w+") as csv :
+        with open((self.CreateDir(current_dir, NEWDIR, resFilename)), "w+") as csv :
 
             # write first header
             csv.write(HEAD_CODE_STORE + DELIM + HEAD_PO_NO + DELIM + HEAD_BARCODE + DELIM + HEAD_QTY + DELIM + HEAD_MODAL)
@@ -236,14 +227,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             # write new line
             csv.write("\n")
 
-            for br, qt, md in zip(brc, qty, mdl) :
-                for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(CODE_STORE, len(br)), itertools.repeat(ponum, len(br)), br, qt, md) :
+            for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(code_store, len(brc)), itertools.repeat(ponum, len(brc)), brc, qty, mdl) :
+                resPO = resPO[0][0]
+                resBC = str(resBC[0])
+                resQT = str(resQT[0])
+                resMD = str(resMD[0])
 
-                    resBC = str(resBC)
-                    resQT = str(resQT)
-                    resMD = str(resMD)
-
-                    csv.write(resCD+DELIM+resPO+DELIM+resBC+DELIM+resQT+DELIM+resMD+'\n')
+                csv.write(resCD+DELIM+resPO+DELIM+resBC+DELIM+resQT+DELIM+resMD+'\n')
 
             csv.close()
 
@@ -251,6 +241,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if reply == QMessageBox.Ok :
             self.open_file(str(resultPath))
+
+
 
 
 if __name__ == '__main__' :

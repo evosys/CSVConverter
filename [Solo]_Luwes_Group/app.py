@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# @Author: ichadhr
-# @Date:   2018-08-29 16:47:14
-# @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-12-06 10:34:58
 import sys
 import time
 import os
@@ -70,6 +65,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         self.lbPD.hide()
         self.lbPD.clear()
 
+
         # hide label Purchase Order
         self.lbPO.hide()
         self.lbPO.clear()
@@ -85,7 +81,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             self.edPO.setStyleSheet("""QLineEdit { color: green }""")
 
     def openXLSPD(self) :
-        fileName, _ = QFileDialog.getOpenFileName(self,"Open Products Data", "","XLS Files (*.xls)")
+        fileName, _ = QFileDialog.getOpenFileName(self,"Open Products Data", "","XLSX Files (*.xlsx)")
         if fileName:
             self.lbPD.setText(fileName)
             x = QUrl.fromLocalFile(fileName).fileName()
@@ -115,14 +111,14 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                     return sheet
 
                 except xlrd.XLRDError as e:
-                    msg = "The '.xls' file has been corrupted."
+                    msg = "The '.xlsx' file has been corrupted."
                     errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
                     sys.exit(0)
         else :
             pathXLS = self.lbPD.text()
             if len(pathXLS) == 0:
 
-                reply = QMessageBox.warning(self, "Warning", "Please select Master Data file first!", QMessageBox.Ok)
+                reply = QMessageBox.warning(self, "Warning", "Please select Products Data file first!", QMessageBox.Ok)
 
                 if reply == QMessageBox.Ok :
                     return False
@@ -135,7 +131,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
                     return sheet
 
                 except xlrd.XLRDError as e:
-                    msg = "The '.xls' file has been corrupted."
+                    msg = "The '.xlsx' file has been corrupted."
                     errorSrv = QMessageBox.critical(self, "Error", msg, QMessageBox.Abort)
                     sys.exit(0)
 
@@ -164,13 +160,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         resPathFile =  Path(os.path.abspath(os.path.join(cDIR, nDir, "{}.csv".format(filename))))
 
-        if os.path.exists(resPathFile) :
-            os.remove(resPathFile)
+        if os.path.exists(str(resPathFile)) :
+            os.remove(str(resPathFile))
         else :
             # os.makedirs(os.path.dirname(resPathFile), exist_ok=True)
-            distutils.dir_util.mkpath(os.path.dirname(resPathFile))
+            distutils.dir_util.mkpath(os.path.dirname(str(resPathFile)))
 
-        return resPathFile
+        return str(resPathFile)
 
 
     # get Data Barcode from Master Data
@@ -226,7 +222,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if sheet :
 
-            rh = self.get_cell_range(3, 3, 3, 3, True)
+            rh = self.get_cell_range(3, 8, 3, 8, True)
 
             return rh
 
@@ -408,7 +404,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         if len(pathXLSPD) == 0:
 
-            reply = QMessageBox.warning(self, "Warning", "Please select Master Data file first!", QMessageBox.Ok)
+            reply = QMessageBox.warning(self, "Warning", "Please select Products Data file first!", QMessageBox.Ok)
 
         else :
 
