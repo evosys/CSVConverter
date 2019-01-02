@@ -2,12 +2,13 @@
 # @Author: ichadhr
 # @Date:   2018-07-16 10:10:23
 # @Last Modified by:   richard.hari@live.com
-# @Last Modified time: 2018-12-30 17:23:27
+# @Last Modified time: 2019-01-02 10:50:08
 import sys
 import time
 import os
 import appinfo
 import itertools
+import re
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -29,7 +30,7 @@ HEAD_MODAL      = 'modal_karton'
 NEWDIR     = 'CSV-output'
 DELIM      = ';'
 
-CODE_STORE = '397744'
+CODE_STORE = '397777'
 
 # main class
 class mainWindow(QMainWindow, Ui_MainWindow) :
@@ -125,7 +126,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     def get_ponum(self) :
         sheet = self.funcXLRD()
 
-        result = sheet.cell_value(rowx=1, colx=0)
+        result = sheet.cell_value(rowx=0, colx=0)
 
         return result
 
@@ -134,7 +135,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows - 1
 
-        tmp = self.get_cell_range(1, 0, 1, totalrow)
+        tmp = self.get_cell_range(2, 0, 2, totalrow)
 
         result = self.checkListFloat(tmp, True)
 
@@ -142,12 +143,22 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
     # get QTY
     def get_qty(self) :
+        result = []
+
         sheet = self.funcXLRD()
         totalrow = sheet.nrows - 1
 
-        tmp = self.get_cell_range(3, 0, 3, totalrow)
+        tmp = self.get_cell_range(13, 0, 13, totalrow)
 
-        result = self.checkListFloat(tmp, True)
+        # result = self.checkListFloat(tmp, True)
+
+        tmpRes = tmp[3:]
+
+        for x in tmpRes:
+            for y in x :
+                if y != '':
+                    res = re.findall("\d+", y)[0]
+                    result.append([res])
 
         return result
 
@@ -177,6 +188,13 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             return float(value).is_integer()
         except ValueError:
             return False
+
+
+    def BtnCnv1(self) :
+        x = self.get_brc()
+        y = len(x)
+        print(x)
+        print(y)
 
 
     # button convert CSV
