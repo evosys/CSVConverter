@@ -126,7 +126,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
     def get_ponum(self) :
         sheet = self.funcXLRD()
 
-        result = sheet.cell_value(rowx=0, colx=0)
+        result = sheet.cell_value(rowx=1, colx=1)
 
         return result
 
@@ -135,7 +135,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows - 1
 
-        tmp = self.get_cell_range(2, 0, 2, totalrow)
+        tmp = self.get_cell_range(4, 0, 4, totalrow)
 
         result = self.checkListFloat(tmp, True)
 
@@ -148,19 +148,35 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
         sheet = self.funcXLRD()
         totalrow = sheet.nrows - 1
 
-        tmp = self.get_cell_range(13, 0, 13, totalrow)
+        tmp = self.get_cell_range(9, 0, 9, totalrow)
 
         # result = self.checkListFloat(tmp, True)
 
-        tmpRes = tmp[3:]
+        # tmpRes = tmp[3:]
 
-        for x in tmpRes:
-            for y in x :
-                if y != '':
-                    res = re.findall("\d+", y)[0]
-                    result.append([res])
+        # for x in tmpRes:
+        #     for y in x :
+        #         if y != '':
+        #             res = re.findall("\d+", y)[0]
+        #             result.append([res])
 
-        return result
+        result = self.checkListFloat(tmp, True)
+
+        return result[:-1]
+
+
+    def get_mdl(self) :
+        result = []
+
+        sheet = self.funcXLRD()
+        totalrow = sheet.nrows - 1
+
+        tmp = self.get_cell_range(13, 0, 13, totalrow)
+
+        result = self.checkListFloat(tmp, False)
+
+        return result[:-1]
+
 
 
     # check a list for float type value
@@ -191,7 +207,7 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
 
     def BtnCnv1(self) :
-        x = self.get_brc()
+        x = self.get_mdl()
         y = len(x)
         print(x)
         print(y)
@@ -208,9 +224,9 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
 
         # make as variabel
         ponum = self.get_ponum()
-        brc = self.get_brc()
-        qty = self.get_qty()
-        mdl = '1'
+        brc   = self.get_brc()
+        qty   = self.get_qty()
+        mdl   = self.get_mdl()
 
         # prepare write CSV
         with open(resPathFile, "w+") as csv :
@@ -221,8 +237,8 @@ class mainWindow(QMainWindow, Ui_MainWindow) :
             # write new line
             csv.write("\n")
 
-            for br, qt in zip(brc, qty) :
-                for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(CODE_STORE, len(br)), itertools.repeat(ponum, len(br)), br, qt, itertools.repeat(mdl, len(br))) :
+            for br, qt, md in zip(brc, qty, mdl) :
+                for resCD, resPO, resBC, resQT, resMD in zip(itertools.repeat(CODE_STORE, len(br)), itertools.repeat(ponum, len(br)), br, qt, md) :
 
                     if resQT:
                         resBC = str(resBC)

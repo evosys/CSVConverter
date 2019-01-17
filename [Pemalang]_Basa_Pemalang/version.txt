@@ -15,7 +15,7 @@ VSVersionInfo(
         StringTable(
             '040904b0',
             [
-            StringStruct('Comments', 'Designed and coded by richard.hari@live.com'),
+            StringStruct('Comments', 'Designed and coded: richard.hari@live.com'),
             StringStruct('CompanyName', 'Unilever'),
             StringStruct('FileDescription', 'CSV Converter'),
             StringStruct('FileVersion', '1, 0, 0, 0'),

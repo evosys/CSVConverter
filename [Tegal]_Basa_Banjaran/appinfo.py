@@ -5,5 +5,5 @@
 # @Last Modified time: 2018-12-30 17:25:34
 
 _appname = "CSV Converter [Basa Banjaran]"
-_version = "1.0.0.0"
+_version = "1.1.0.0"
 _by      = "richard.hari@live.com"
